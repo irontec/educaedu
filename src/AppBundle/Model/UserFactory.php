@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Model;
 
 class UserFactory implements UserFactoryInterface
 {
@@ -9,7 +9,7 @@ class UserFactory implements UserFactoryInterface
      *
      * @return \AppBundle\Entity\User
      */
-    public function makeOne(User $rawUser)
+    public function makeOne(UserInterface $rawUser)
     {
         return $this->make($rawUser);
     }
@@ -33,9 +33,9 @@ class UserFactory implements UserFactoryInterface
      *
      * @return \AppBundle\Entity\User
      */
-    public function make(User $rawUser)
+    public function make(UserInterface $rawUser)
     {
         // You can format object, in this case we left it to return as raw object, feedback is welcome!
-        return $rawUser->toApi($rawUser);
+        return $rawUser;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Handler;
 
-use AppBundle\Entity\User;
+use AppBundle\Model\UserInterface;
 
 /**
  * ApiHandleInterface.
@@ -14,7 +14,7 @@ interface ApiUserHandlerInterface
      * 
      * @param User $user
      */
-    public function get(User $user);
+    public function get(UserInterface $user);
 
     /**
      * Insert User to repository.
@@ -36,5 +36,5 @@ interface ApiUserHandlerInterface
      * 
      * @param User $user
      */
-    public function delete(User $user);
+    public function delete(UserInterface $user);
 }

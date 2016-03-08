@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Model;
 
 /**
  * UserGateway.
@@ -12,7 +12,7 @@ interface UserGatewayInterface
      *
      * @return User
      */
-    public function apiInsert(User $user);
+    public function apiInsert(UserInterface $user);
 
     /**
      * @return type
@@ -24,7 +24,7 @@ interface UserGatewayInterface
      *
      * @return User
      */
-    public function insert(User $user);
+    public function insert(UserInterface $user);
 
     /**
      * Update user.
@@ -34,5 +34,5 @@ interface UserGatewayInterface
     /**
      * @param User $user
      */
-    public function remove(User $user);
+    public function remove(UserInterface $user);
 }

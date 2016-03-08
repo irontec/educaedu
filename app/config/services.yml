@@ -12,15 +12,15 @@ services:
         alias: doctrine
 
     app.user_factory:
-        class: AppBundle\Entity\UserFactory
+        class: AppBundle\Model\UserFactory
 
     app.user_gateway:
         class: AppBundle\Entity\UserGateway
         factory: [ "@doctrine", getRepository]
-        arguments: [ "AppBundle:ORMUser" ]
+        arguments: [ "AppBundle:User" ]
 
     app.user_repository:
-        class: AppBundle\Entity\UserRepository
+        class: AppBundle\Model\UserRepository
         arguments: [ "@app.user_gateway", "@app.user_factory" ]
 
 

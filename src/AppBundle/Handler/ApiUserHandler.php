@@ -2,8 +2,8 @@
 
 namespace AppBundle\Handler;
 
-use AppBundle\Entity\UserRepository;
-use AppBundle\Entity\User;
+use AppBundle\Model\UserRepository;
+use AppBundle\Model\UserInterface;
 use AppBundle\Form\Type\RegistrationFormType;
 use AppBundle\Form\Model\RegistrationFormModel;
 use AppBundle\Form\Type\ProfileFormType;
@@ -46,7 +46,7 @@ class ApiUserHandler implements ApiUserHandlerInterface
      *
      * @return User
      */
-    public function get(User $user)
+    public function get(UserInterface $user)
     {
         return $this->repository->parse($user);
     }
@@ -111,7 +111,7 @@ class ApiUserHandler implements ApiUserHandlerInterface
      * 
      * @param User $user
      */
-    public function delete(User $user)
+    public function delete(UserInterface $user)
     {
         $this->repository->remove($user);
     }
@@ -155,7 +155,7 @@ class ApiUserHandler implements ApiUserHandlerInterface
      *
      * @return User
      */
-    protected function fromForm(User $user, UserFormModelInterface $userModel)
+    protected function fromForm(UserInterface $user, UserFormModelInterface $userModel)
     {
         $user
             ->setEmailCanonical($userModel->getEmail())

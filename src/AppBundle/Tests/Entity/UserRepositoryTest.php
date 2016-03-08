@@ -2,10 +2,10 @@
 
 namespace AppBundle\Tests\Entity;
 
-use AppBundle\Entity\ORMUser as User;
-use AppBundle\Entity\UserFactory;
+use AppBundle\Entity\User;
 use AppBundle\Entity\UserGateway;
-use AppBundle\Entity\UserRepository;
+use AppBundle\Model\UserFactory;
+use AppBundle\Model\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserRepositoryTest extends WebTestCase
@@ -86,7 +86,6 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindOneByWithBadParams()
     {
-        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
-        $this->repository->findOneBy(array('name' => 'jhkjgkjh'), array())->willThrow();
+        $this->repository->findOneBy(array('name' => 'jhkjgkjh'), array());
     }
 }

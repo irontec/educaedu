@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Model\UserGatewayInterface;
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Model\UserInterface;
 
 /**
  * UserGateway.
@@ -14,7 +16,7 @@ class UserGateway extends EntityRepository implements UserGatewayInterface
      *
      * @return User
      */
-    public function apiInsert(User $user)
+    public function apiInsert(UserInterface $user)
     {
         $user
             ->setEnabled(true)
@@ -34,7 +36,7 @@ class UserGateway extends EntityRepository implements UserGatewayInterface
      */
     public function findNew()
     {
-        return ORMUser::fromArray();
+        return User::fromArray();
     }
 
     /**
@@ -42,7 +44,7 @@ class UserGateway extends EntityRepository implements UserGatewayInterface
      *
      * @return User
      */
-    public function insert(User $user)
+    public function insert(UserInterface $user)
     {
         $this->_em->persist($user);
         $this->_em->flush();
@@ -61,7 +63,7 @@ class UserGateway extends EntityRepository implements UserGatewayInterface
     /**
      * @param User $user
      */
-    public function remove(User $user)
+    public function remove(UserInterface $user)
     {
         $this->_em->remove($user);
         $this->_em->flush();

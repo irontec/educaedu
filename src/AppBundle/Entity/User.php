@@ -4,208 +4,206 @@
 
 namespace AppBundle\Entity;
 
-use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Model\GroupInterface;
+use AppBundle\Model\UserInterface;
+use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * User.
+ * @ORM\Entity
+ * @ORM\Table(name = "user")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\UserGateway")
  */
-interface User
+class User extends BaseUser implements UserInterface
 {
     /**
-     * @param array $array.
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public static function fromArray(array $array = array());
+    protected $id;
 
     /**
-     * @param User $user.
+     * @var string
+     * @ORM\Column(type="string", length=255)
      */
-    public static function toApi(User $user);
-
-    public function __construct();
-
-    public function addRole($role);
+    protected $username;
 
     /**
-     * Serializes the user.
-     *
-     * The serialized data have to contain the fields used by the equals method and the username.
-     *
-     * @return string
+     * @var string
+     * @ORM\Column(type="string", length=255, unique=true )
      */
-    public function serialize();
+    protected $usernameCanonical;
 
     /**
-     * Unserializes the user.
-     *
-     * @param string $serialized
+     * @var string
+     * @ORM\Column(type="string", length=255)
      */
-    public function unserialize($serialized);
+    protected $email;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, unique=true )
+     */
+    protected $emailCanonical;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * The salt to use for hashing.
+     *
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    protected $salt;
+
+    /**
+     * Encrypted password. Must be persisted.
+     *
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * User description.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
+     */
+    protected $description = null;
+
+    /**
+     * Plain password. Used for model validation. Must not be persisted.
+     *
+     * @var string
+     */
+    protected $plainPassword;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    protected $lastLogin;
+
+    /**
+     * Random string sent to the user email address in order to verify it.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string
+     */
+    protected $confirmationToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    protected $passwordRequestedAt;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $locked = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $expired = false;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    protected $expiresAt;
+
+    /**
+     * @ORM\Column(type="array")
+     *
+     * @var array
+     */
+    protected $roles;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $credentialsExpired = false;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    protected $credentialsExpireAt;
+
+    /**
+     * @param type $username
+     * @param type $email
+     * @param type $pass
+     */
+    public function __construct($username = null, $email = null, $pass = null)
+    {
+        parent::__construct();
+
+        $this->username = $username;
+        $this->email = $email;
+        $this->password = $pass;
+    }
+
+    /**
+     * @param array $user
+     *
+     * @return \self
+     */
+    public static function fromArray(array $user = array('username' => null, 'email' => null))
+    {
+        $rawUser = new self($user['username'], $user['email']);
+        $rawUser->setExpired(array_key_exists('expired', $user) ? $user['expired'] : false);
+        $rawUser->setLocked(array_key_exists('locked', $user) ? $user['locked'] : false);
+
+        return $rawUser;
+    }
+
+    public function addRole($role)
+    {
+        return parent::addRole($role);
+    }
 
     /**
      * Removes sensitive data from the user.
      */
-    public function eraseCredentials();
+    public function eraseCredentials()
+    {
+        parent::eraseCredentials();
+    }
 
-    /**
-     * Returns the user unique id.
-     *
-     * @return mixed
-     */
-    public function getId();
+    public function __toString()
+    {
+        return (string) $this->getUsername();
+    }
 
-    public function getUsername();
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
-    public function getUsernameCanonical();
-
-    public function getSalt();
-
-    public function getDescription();
-
-    public function getEmail();
-
-    public function getEmailCanonical();
-
-    /**
-     * Gets the encrypted password.
-     *
-     * @return string
-     */
-    public function getPassword();
-
-    public function getPlainPassword();
-
-    /**
-     * Gets the last login time.
-     *
-     * @return \DateTime
-     */
-    public function getLastLogin();
-
-    public function getConfirmationToken();
-
-    /**
-     * Returns the user roles.
-     *
-     * @return array The roles
-     */
-    public function getRoles();
-
-    /**
-     * Never use this to check if this user has access to anything!
-     *
-     * Use the SecurityContext, or an implementation of AccessDecisionManager
-     * instead, e.g.
-     *
-     *         $securityContext->isGranted('ROLE_USER');
-     *
-     * @param string $role
-     *
-     * @return bool
-     */
-    public function hasRole($role);
-
-    public function isAccountNonExpired();
-
-    public function isAccountNonLocked();
-
-    public function isCredentialsNonExpired();
-
-    public function isCredentialsExpired();
-
-    public function isEnabled();
-
-    public function isExpired();
-
-    public function isLocked();
-
-    public function isSuperAdmin();
-
-    public function isUser(UserInterface $user = null);
-
-    public function removeRole($role);
-
-    public function setUsername($username);
-
-    public function setUsernameCanonical($usernameCanonical);
-
-    /**
-     * @param \DateTime $date
-     *
-     * @return User
-     */
-    public function setCredentialsExpireAt(\DateTime $date);
-
-    /**
-     * @param bool $boolean
-     *
-     * @return User
-     */
-    public function setCredentialsExpired($boolean);
-
-    public function setDescription($description);
-
-    public function setEmail($email);
-
-    public function setEmailCanonical($emailCanonical);
-
-    public function setEnabled($boolean);
-
-    /**
-     * Sets this user to expired.
-     *
-     * @param bool $boolean
-     *
-     * @return User
-     */
-    public function setExpired($boolean);
-
-    /**
-     * @param \DateTime $date
-     *
-     * @return User
-     */
-    public function setExpiresAt(\DateTime $date);
-
-    public function setPassword($password);
-
-    public function setSuperAdmin($boolean);
-
-    public function setPlainPassword($password);
-
-    public function setLastLogin(\DateTime $time);
-
-    public function setLocked($boolean);
-
-    public function setConfirmationToken($confirmationToken);
-
-    public function setPasswordRequestedAt(\DateTime $date = null);
-
-    /**
-     * Gets the timestamp that the user requested a password reset.
-     *
-     * @return null|\DateTime
-     */
-    public function getPasswordRequestedAt();
-
-    public function isPasswordRequestNonExpired($ttl);
-
-    public function setRoles(array $roles);
-
-    /**
-     * Gets the groups granted to the user.
-     *
-     * @return Collection
-     */
-    public function getGroups();
-
-    public function getGroupNames();
-
-    public function hasGroup($name);
-
-    public function addGroup(GroupInterface $group);
-
-    public function removeGroup(GroupInterface $group);
-
-    public function __toString();
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
 }

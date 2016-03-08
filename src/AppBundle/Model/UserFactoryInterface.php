@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Model;
 
 interface UserFactoryInterface
 {
@@ -9,7 +9,7 @@ interface UserFactoryInterface
      *
      * @return \AppBundle\Entity\User
      */
-    public function makeOne(User $rawUser);
+    public function makeOne(UserInterface $rawUser);
 
     /**
      * @param array $rawUsers
@@ -23,5 +23,5 @@ interface UserFactoryInterface
      *
      * @return \AppBundle\Entity\User
      */
-    public function make(User $rawUser);
+    public function make(UserInterface $rawUser);
 }

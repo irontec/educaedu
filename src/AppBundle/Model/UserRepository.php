@@ -1,8 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
-
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+namespace AppBundle\Model;
 
 /**
  * UserRepository.
@@ -10,18 +8,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class UserRepository
 {
     /**
-     * @var \AppBundle\Entity\UserGatewayInterface
+     * @var \AppBundle\Model\UserGatewayInterface
      */
     private $gateway;
 
     /**
-     * @var \AppBundle\Entity\UserFactoryInterface
+     * @var \AppBundle\Model\UserFactoryInterface
      */
     private $factory;
 
     /**
-     * @param \AppBundle\Entity\UserGatewayInterface $gateway
-     * @param \AppBundle\Entity\UserFactoryInterface $factory
+     * @param \AppBundle\Model\UserGatewayInterface $gateway
+     * @param \AppBundle\Model\UserFactoryInterface $factory
      */
     public function __construct(UserGatewayInterface $gateway, UserFactoryInterface $factory)
     {
@@ -77,7 +75,7 @@ class UserRepository
         $user = $this->gateway->findOneBy($criteria, $orderBy);
 
         if (null === $user) {
-            throw new NotFoundHttpException('Entity User not Found');
+            return null;
         }
 
         return $this->factory->makeOne($user);
@@ -96,7 +94,7 @@ class UserRepository
      *
      * @return User
      */
-    public function insert(User $user)
+    public function insert(UserInterface $user)
     {
         $rawUser = $this->gateway->apiInsert($user);
 
@@ -114,7 +112,7 @@ class UserRepository
     /**
      * @param User $user
      */
-    public function remove(User $user)
+    public function remove(UserInterface $user)
     {
         $this->gateway->remove($user);
     }
@@ -124,7 +122,7 @@ class UserRepository
      *
      * @return User
      */
-    public function parse(User $user)
+    public function parse(UserInterface $user)
     {
         return $this->factory->makeOne($user);
     }

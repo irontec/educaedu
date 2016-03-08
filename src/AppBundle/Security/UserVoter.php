@@ -4,7 +4,7 @@ namespace AppBundle\Security;
 
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use AppBundle\Entity\User;
+use AppBundle\Model\UserInterface;
 
 class UserVoter extends Voter
 {
@@ -13,7 +13,7 @@ class UserVoter extends Voter
 
     public function supports($attribute, $subject)
     {
-        return $subject instanceof User && in_array($attribute, array(
+        return $subject instanceof UserInterface && in_array($attribute, array(
               self::VIEW, self::EDIT,
         ));
     }
@@ -22,7 +22,7 @@ class UserVoter extends Voter
     {
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
+        if (!$user instanceof UserInterface) {
             return false;
         }
 
