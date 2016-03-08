@@ -655,9 +655,10 @@ Abrimos el default controller y añadimos los siguentes metodos
 Y accedemos a nuestra recién creada documentación en 127.0.0.1:8000/app_dev.php/api/doc.
 Ya tenemos todo lo necesario, ahora podemos empezar a desarrollar nuestra aplicación.
 
+El primer archivo que necesitamos es el `MeControllerTest`, este será el encargado de
 
 
 ## Site 2
 
 No tiene porque ser symfony, podría servir cualquier aplicación que consuma el API, AngularJS, Backbone, Ember, etc...
-De momento utilizaremos el sandbox que generamos con NelmioApiDocBundle.
+De momento utilizaremos el sandbox que generamos con NelmioApiDocBundle y los tests.
